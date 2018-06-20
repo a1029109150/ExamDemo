@@ -21,13 +21,18 @@ public class Schedule {
     private List<Integer> workingList = new LinkedList<Integer>();
     //任务消耗对照表
     private Map<Integer,Integer> taskMap = new HashMap<Integer, Integer>();
+    //任务状态表
+    private Map<Integer,Integer> taskStatusMap = new HashMap<Integer, Integer>();
+    //节点运行任务表
+    private Map<Integer,Integer> nodeTaskMap = new HashMap<Integer, Integer>();
     private int rule = 0;
+    //1
     public int init() {
         // TODO 方法未实现
         return ReturnCodeKeys.E000;
     }
 
-
+    //2
     public int registerNode(int nodeId) {
         if (nodeId <= rule)
         {
@@ -45,6 +50,7 @@ public class Schedule {
         return ReturnCodeKeys.E003;
     }
 
+    //3
     public int unregisterNode(int nodeId) {
 
         if (nodeId <= rule)
@@ -55,20 +61,12 @@ public class Schedule {
         {
             return ReturnCodeKeys.E007;
         }
-        if (nodeIdList.contains(nodeId))
-        {
-            if ( workingList.contains(nodeId)){
-                hangTaskList.add(nodeId);
-            }else{
                 nodeIdList.remove(nodeId);
-            }
             return ReturnCodeKeys.E006;
-        }else{
-            return ReturnCodeKeys.E007;
-        }
     }
 
 
+    //4
     public int addTask(int taskId, int consumption) {
         if (taskId <= rule)
         {
@@ -83,6 +81,7 @@ public class Schedule {
     }
 
 
+    //5
     public int deleteTask(int taskId) {
         if (taskId <= rule)
         {
@@ -96,15 +95,18 @@ public class Schedule {
     }
 
 
+    //6
     public int scheduleTask(int threshold) {
         // TODO 方法未实现
         return ReturnCodeKeys.E000;
     }
 
 
+    //7
     public int queryTaskStatus(List<TaskInfo> tasks) {
         // TODO 方法未实现
         return ReturnCodeKeys.E000;
     }
+
 
 }
