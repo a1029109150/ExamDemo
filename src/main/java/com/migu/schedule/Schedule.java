@@ -17,14 +17,12 @@ public class Schedule {
     private List<Integer> nodeIdList = new LinkedList<Integer>();
     //挂起任务队列
     private List<Integer> hangTaskList = new LinkedList<Integer>();
-    //正在运行的节点编号表
-    private List<Integer> workingList = new LinkedList<Integer>();
     //任务消耗对照表
     private Map<Integer,Integer> taskMap = new HashMap<Integer, Integer>();
     //任务状态表
     private Map<Integer,Integer> taskStatusMap = new HashMap<Integer, Integer>();
     //节点运行任务表
-    private Map<Integer,Integer> nodeTaskMap = new HashMap<Integer, Integer>();
+    private Map<Integer,List<Integer>> nodeTaskMap = new HashMap<Integer, List<Integer>>();
     private int rule = 0;
     //1
     public int init() {
@@ -61,8 +59,15 @@ public class Schedule {
         {
             return ReturnCodeKeys.E007;
         }
-                nodeIdList.remove(nodeId);
-            return ReturnCodeKeys.E006;
+        List<Integer> taskList = nodeTaskMap.get("nodeId");
+        if (!taskList.isEmpty()){
+            for (Integer task:taskList)
+            {
+                hangTaskList.add(task);
+            }
+        }
+        nodeIdList.remove(nodeId);
+        return ReturnCodeKeys.E006;
     }
 
 
@@ -97,15 +102,27 @@ public class Schedule {
 
     //6
     public int scheduleTask(int threshold) {
-        // TODO 方法未实现
+        //while (hangTaskList.isEmpty())
         return ReturnCodeKeys.E000;
     }
 
 
     //7
     public int queryTaskStatus(List<TaskInfo> tasks) {
-        // TODO 方法未实现
-        return ReturnCodeKeys.E000;
+        tasks.clear();
+        TaskInfo taskInfo;
+        for (Integer task:taskStatusMap.keySet())
+        {
+            Integer node = taskStatusMap.get(task);
+            taskInfo = new TaskInfo();
+            taskInfo.setNodeId(node);
+            taskInfo.setTaskId(task);
+            tasks.add(taskInfo);
+        }
+        if (tasks.isEmpty()){
+            return ReturnCodeKeys.E016;
+        }
+        return ReturnCodeKeys.E015;
     }
 
 
