@@ -4,10 +4,7 @@ package com.migu.schedule;
 import com.migu.schedule.constants.ReturnCodeKeys;
 import com.migu.schedule.info.TaskInfo;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /*
 *类名和方法不能修改
@@ -23,6 +20,8 @@ public class Schedule {
     private Map<Integer,Integer> taskStatusMap = new HashMap<Integer, Integer>();
     //节点运行任务表
     private Map<Integer,List<Integer>> nodeTaskMap = new HashMap<Integer, List<Integer>>();
+    //节点总消耗表
+    private Map<Integer,Integer> TotalConsumpMap = new HashMap<Integer, Integer>();
     private int rule = 0;
     //1
     public int init() {
@@ -102,7 +101,21 @@ public class Schedule {
 
     //6
     public int scheduleTask(int threshold) {
-        //while (hangTaskList.isEmpty())
+        for (Integer nodeId:nodeIdList)
+        {
+            int totalConsump = 0;
+            List<Integer> taskList = nodeTaskMap.get(nodeId);
+            for (Integer task:taskList)
+            {
+                Integer consump = taskMap.get(task);
+                totalConsump = totalConsump + consump;
+            }
+            TotalConsumpMap.put(nodeId,totalConsump);
+
+        }
+        while (hangTaskList.isEmpty()){
+
+        }
         return ReturnCodeKeys.E000;
     }
 
@@ -119,6 +132,7 @@ public class Schedule {
             taskInfo.setTaskId(task);
             tasks.add(taskInfo);
         }
+        Collections.sort(tasks,new CompareTask());
         if (tasks.isEmpty()){
             return ReturnCodeKeys.E016;
         }
